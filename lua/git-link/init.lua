@@ -1,19 +1,21 @@
-local core = require "coredor"
+local coredor = require "coredor"
 local utils = require "git-link.utils"
 
-vim.api.nvim_create_user_command("GitRemoteCopyRepoLink", function()
+local M = {}
+
+---function copies a link to your origin remote repo.
+function M.copy_repo_link()
     local link = utils.resolve_repo_url()
     if not link then
         return
     end
 
     vim.notify("Resolved link: " .. link)
-    core.save_to_exchange_buffer(link)
-end, {
-    desc = "Copies a link to currently working repository into the clipboard",
-})
+    coredor.save_to_exchange_buffer(link)
+end
 
-vim.api.nvim_create_user_command("GitRemoteCopyRepoLinkToFile", function()
+---function copies a link to a file of your origin remote repo.
+function M.copy_repo_link_to_file()
     local repo_link = utils.resolve_repo_url()
     if not repo_link then
         return
@@ -25,7 +27,7 @@ vim.api.nvim_create_user_command("GitRemoteCopyRepoLinkToFile", function()
         return
     end
 
-    local current_file = core.current_working_file()
+    local current_file = coredor.current_working_file()
     local file_link = utils.resolve_link_to_current_working_file(
         repo_link,
         branch,
@@ -33,12 +35,11 @@ vim.api.nvim_create_user_command("GitRemoteCopyRepoLinkToFile", function()
     )
 
     vim.notify("Resolved link: " .. file_link)
-    core.save_to_exchange_buffer(file_link)
-end, {
-    desc = "Copies a link to currently working file into the clipboard",
-})
+    coredor.save_to_exchange_buffer(file_link)
+end
 
-vim.api.nvim_create_user_command("GitRemoteCopyRepoLinkToLine", function()
+---function copies a link to a line of your origin remote repo.
+function M.copy_repo_link_to_line()
     local repo_link = utils.resolve_repo_url()
     if not repo_link then
         return
@@ -50,7 +51,7 @@ vim.api.nvim_create_user_command("GitRemoteCopyRepoLinkToLine", function()
         return
     end
 
-    local current_file = core.current_working_file()
+    local current_file = coredor.current_working_file()
     local current_line = vim.api.nvim_win_get_cursor(0)[1]
     local line_link = utils.resolve_link_to_current_line(
         repo_link,
@@ -60,7 +61,7 @@ vim.api.nvim_create_user_command("GitRemoteCopyRepoLinkToLine", function()
     )
 
     vim.notify("Resolved link: " .. line_link)
-    core.save_to_exchange_buffer(line_link)
-end, {
-    desc = "Copies a link to currently working line into the clipboard",
-})
+    coredor.save_to_exchange_buffer(line_link)
+end
+
+return M
