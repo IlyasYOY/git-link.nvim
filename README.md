@@ -12,7 +12,8 @@ Installation using [wbthomason/packer.nvim](https://github.com/wbthomason/packer
 
 ```lua
 use {
-    "Ilyasyoy/git-link.nvim"
+    "Ilyasyoy/coredor.nvim", -- dependency with utilities 
+    "Ilyasyoy/git-link.nvim",
 }
 ```
 
