@@ -1,7 +1,7 @@
-all: format test lint
+all: format lint test
 
 test:
-	nvim --headless --noplugin -u scripts/minimal.vim -c "PlenaryBustedDirectory tests { minimal_init = './scripts/minimal_init.vim' }"
+	nvim --headless -u scripts/minimal-for-lazy.lua -c "PlenaryBustedDirectory tests { minimal_init = './scripts/minimal-for-lazy.lua' }"
 
 lint:
 	luacheck lua tests
