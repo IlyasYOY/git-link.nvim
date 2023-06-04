@@ -4,18 +4,18 @@ local utils = require "git-link.utils"
 local M = {}
 
 local function finalize_link(link)
-    local should_http = vim.fn.input {
-        prompt = "Resolved link: "
-            .. link
-            .. "\nShould we make it http? (y — yes, no otherwise)\n",
-        cancelreturn = "n",
-    }
-    if should_http == "y" then
-        link = string.gsub(link, "^https", "http")
-    end
-
-    vim.notify("\nLink copied: " .. link)
-    coredor.save_to_exchange_buffer(link)
+    vim.ui.select({ "http", "https" }, {
+        prompt = "Protocol for resolved link",
+        format_item = function(item)
+            return "Use " .. item .. " protocol."
+        end,
+    }, function(choice)
+        if choice == "http" then
+            link = string.gsub(link, "^https", "http")
+        end
+        vim.notify("\nLink copied: " .. link)
+        coredor.save_to_exchange_buffer(link)
+    end)
 end
 
 ---function copies a link to your origin remote repo.
