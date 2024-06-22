@@ -1,7 +1,8 @@
 ---
 name: Tests
 
-on: [push]
+on:
+  - push
 
 jobs:
   lua-tests:
@@ -11,12 +12,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             rev: nightly/nvim-linux64.tar.gz
             manager: sudo apt-get
             packages: -y ripgrep
-          - os: macos-12
-            rev: nightly/nvim-macos.tar.gz
+          - os: ubuntu-24.04
+            rev: stable/nvim-linux64.tar.gz
+            manager: sudo apt-get
+          - os: macos-14
+            rev: nightly/nvim-macos-x86_64.tar.gz
+            manager: brew
+            packages: ripgrep
+          - os: macos-14
+            rev: stable/nvim-macos-x86_64.tar.gz
             manager: brew
             packages: ripgrep
     steps:
@@ -37,8 +45,7 @@ jobs:
           }
           mkdir -p ~/.local/share/nvim/site/pack/vendor/start
           git clone --depth 1 https://github.com/nvim-lua/plenary.nvim ~/.local/share/nvim/site/pack/vendor/start/plenary.nvim
-          git clone --depth 1 https://github.com/IlyasYOY/coredor.nvim ~/.local/share/nvim/site/pack/vendor/start/coredor.nvim
-          git clone --depth 1 https://github.com/kyazdani42/nvim-web-devicons ~/.local/share/nvim/site/pack/vendor/start/nvim-web-devicons
+          git clone --depth 1 https://github.com/IlyaYOY/coredor.nvim ~/.local/share/nvim/site/pack/vendor/start/coredor.nvim
           ln -s $(pwd) ~/.local/share/nvim/site/pack/vendor/start
       - name: Run tests
         run: |
