@@ -2,22 +2,19 @@
 
 Plugin to generate links for remote repositories.
 
-## Status 
+## Status
 
 Project is currently in WIP status.
 
-## Installation 
+## Installation
 
-Installation using [wbthomason/packer.nvim](https://github.com/wbthomason/packer.nvim): 
+Installation using [wbthomason/packer.nvim](https://github.com/wbthomason/packer.nvim):
 
 ```lua
 use {
-    "Ilyasyoy/coredor.nvim", -- dependency with utilities 
     "Ilyasyoy/git-link.nvim",
 }
 ```
-
-This plugin requires: [IlyasYOY/coredor.nvim](https://github.com/IlyasYOY/coredor.nvim).
 
 ## Example configuration
 
@@ -44,4 +41,3 @@ end, {
     desc = "Copies a link to currently working line into the clipboard",
 })
 ```
-

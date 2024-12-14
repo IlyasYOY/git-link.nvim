@@ -1,7 +1,18 @@
-local coredor = require "coredor"
 local utils = require "git-link.utils"
 
 local M = {}
+
+-- Saves string to + buffer
+---@param string string
+function M.save_to_exchange_buffer(string)
+    vim.fn.setreg("+", string)
+end
+
+---Returns path to current file
+---@return string
+function M.current_working_file()
+    return vim.fn.expand "%:."
+end
 
 local function finalize_link(link)
     vim.ui.select({ "http", "https" }, {
@@ -14,7 +25,7 @@ local function finalize_link(link)
             link = string.gsub(link, "^https", "http")
         end
         vim.notify("\nLink copied: " .. link)
-        coredor.save_to_exchange_buffer(link)
+        M.save_to_exchange_buffer(link)
     end)
 end
 
@@ -41,7 +52,7 @@ function M.copy_repo_link_to_file()
         return
     end
 
-    local current_file = coredor.current_working_file()
+    local current_file = M.current_working_file()
     local link = utils.resolve_link_to_current_working_file(
         repo_link,
         branch,
@@ -64,7 +75,7 @@ function M.copy_repo_link_to_line()
         return
     end
 
-    local current_file = coredor.current_working_file()
+    local current_file = M.current_working_file()
     local current_line = vim.api.nvim_win_get_cursor(0)[1]
     local link = utils.resolve_link_to_current_line(
         repo_link,

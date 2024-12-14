@@ -1,5 +1,3 @@
-local core = require "coredor"
-
 local M = {}
 
 -- Returns current woring branch
@@ -44,6 +42,75 @@ function M.get_remote_url(remote)
     return result_handle:read()
 end
 
+-- Check if str starts with prefix.
+---@param str string string to have prefix.
+---@param prefix string? prefix itself.
+---@param plain boolean? default is false
+---@return boolean
+function M.string_has_prefix(str, prefix, plain)
+    if plain == nil then
+        plain = false
+    end
+    if prefix == nil then
+        return false
+    end
+
+    local index = string.find(str, prefix, 1, plain)
+
+    return index == 1
+end
+
+-- Check if str ends with prefix.
+---@param str string
+---@param suffix string?
+---@param plain boolean? default is false
+---@return boolean
+function M.string_has_suffix(str, suffix, plain)
+    if suffix == nil then
+        return false
+    end
+
+    return M.string_has_prefix(
+        string.reverse(str),
+        string.reverse(suffix),
+        plain
+    )
+end
+
+-- Strips prefix if present.
+-- Works on plain strings.
+---@param target string
+---@param prefix string
+---@return string
+function M.string_strip_prefix(target, prefix)
+    if not M.string_has_prefix(target, prefix, true) then
+        return target
+    end
+
+    return string.sub(target, #prefix + 1, #target)
+end
+
+-- Strips tail if present.
+-- Works on plain strings.
+---@param target string
+---@param tail string
+---@return string
+function M.string_strip_suffix(target, tail)
+    if not M.string_has_suffix(target, tail, true) then
+        return target
+    end
+
+    return string.sub(target, 1, #target - #tail)
+end
+
+---Splits string using separator.
+---@param target string to split
+---@param separator string
+---@return string[]
+function M.string_split(target, separator)
+    return vim.split(target, separator, { plain = true, trimempty = true })
+end
+
 -- Converts URL to link.
 ---@param url string? url to convert to link.
 ---@return string? url of the remote server.
@@ -52,16 +119,16 @@ function M.url_to_link(url)
         return nil
     end
 
-    if core.string_has_prefix(url, "http") then
-        return core.string_strip_suffix(url, ".git")
+    if M.string_has_prefix(url, "http") then
+        return M.string_strip_suffix(url, ".git")
     end
 
-    if core.string_has_prefix(url, "git@") then
+    if M.string_has_prefix(url, "git@") then
         local ssh_url = url
-        ssh_url = core.string_strip_suffix(ssh_url, ".git")
-        ssh_url = core.string_strip_prefix(ssh_url, "git@")
+        ssh_url = M.string_strip_suffix(ssh_url, ".git")
+        ssh_url = M.string_strip_prefix(ssh_url, "git@")
 
-        local split = core.string_split(ssh_url, ":")
+        local split = M.string_split(ssh_url, ":")
         local server, repo = split[1], split[2]
         local server_url = "https://" .. server .. "/"
         return server_url .. repo
